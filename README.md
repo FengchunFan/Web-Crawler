@@ -1,11 +1,11 @@
 # Web-Crawler
 
 This is a web crawler for CS 172 project in UC Riverside.
-\n
+##
 Group member:
+
 Fengchun Fan; 
-
-
+##
 Referenced sources:
 
 https://pwp.stevecassidy.net/data/crawling/
