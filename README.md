@@ -8,8 +8,8 @@ Fengchun Fan;
 ##
 Referenced sources:
 
-https://pwp.stevecassidy.net/data/crawling/
-
 https://www.youtube.com/watch?v=m_3gjHGxIJc
 
 https://docs.scrapy.org/en/latest/
+
+https://scrapy-chs.readthedocs.io/zh_CN/0.24/intro/tutorial.html
