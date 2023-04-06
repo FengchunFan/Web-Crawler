@@ -11,3 +11,5 @@ Referenced sources:
 https://pwp.stevecassidy.net/data/crawling/
 
 https://www.youtube.com/watch?v=m_3gjHGxIJc
+
+https://docs.scrapy.org/en/latest/
