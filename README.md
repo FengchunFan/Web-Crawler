@@ -14,4 +14,4 @@ https://docs.scrapy.org/en/latest/
 
 https://scrapy-chs.readthedocs.io/zh_CN/0.24/intro/tutorial.html
 
-https://scrapeops.io/python-scrapy-playbook/scrapy-beginners-guide-user-agents-proxies/
+https://scrapeops.io/python-scrapy-playbook/
