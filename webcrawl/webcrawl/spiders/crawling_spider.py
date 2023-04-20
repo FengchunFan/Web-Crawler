@@ -5,7 +5,12 @@ from scrapy.linkextractors import LinkExtractor
 class WebCrawler(CrawlSpider):
     name = "WebCrawler" #identifier
     allowed_domains = ["ucr.edu",".gov"]
-    start_urls = ["https://www.ucr.edu/", "https://news.ucr.edu/articles"]
+    start_urls = ["https://www.ucr.edu/", "https://news.ucr.edu/articles?page=0"]
+
+    #testing purpose, remove later
+    for i in range(1,10):
+        start_urls.append("https://news.ucr.edu/articles?page=" + str(i))
+
     #crawl
     rules = (
         Rule(LinkExtractor(allow="articles"), callback="parse_articles"),
