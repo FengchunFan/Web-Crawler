@@ -13,12 +13,12 @@ class WebCrawler(CrawlSpider):
     #    start_urls.append("https://news.ucr.edu/articles?page=" + str(i))
 
     #size limiter
-    max_size = 0.1 * 1024 * 1024 #0.1MB => 102KB
+    max_size = 0.5 * 1024 * 1024 #0.5MB => 512KB
     current_size = 0
 
     #crawl
     rules = (
-        Rule(LinkExtractor(allow=".edu", deny="extension" and "collections/overview"), callback="parse"),
+        Rule(LinkExtractor(allow=".edu", deny="extension.ucr.edu/course/" and "collections/overview"), callback="parse"),
     #    Rule(LinkExtractor(allow="articles"), callback="parse"),
     #    Rule(LinkExtractor(allow="about"), callback="parse"),
     #    Rule(LinkExtractor(allow="research"), callback="parse"),
@@ -32,7 +32,7 @@ class WebCrawler(CrawlSpider):
         url = response.css('meta[property="og:url"]::attr(content)').get()
         # if none of the three field yield null and size is less than max_size
         if title and description and url and (self.current_size <= self.max_size): 
-            temp_size = len(title) + len(description) + len(url)
+            temp_size = len(title) + len(description) + len(url) + len("title:") + len("description:") + len("url:")
             self.current_size = self.current_size + temp_size
             yield{
                 "title": title,
