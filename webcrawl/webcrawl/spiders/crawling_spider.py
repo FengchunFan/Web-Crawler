@@ -13,12 +13,12 @@ class WebCrawler(CrawlSpider):
     #    start_urls.append("https://news.ucr.edu/articles?page=" + str(i))
 
     #size limiter
-    max_size = 1 * 1024 * 1024 #1MB
+    max_size = 0.1 * 1024 * 1024 #0.1MB => 102KB
     current_size = 0
 
     #crawl
     rules = (
-        Rule(LinkExtractor(allow=".edu", deny="extension"), callback="parse"),
+        Rule(LinkExtractor(allow=".edu", deny="extension" and "collections/overview"), callback="parse"),
     #    Rule(LinkExtractor(allow="articles"), callback="parse"),
     #    Rule(LinkExtractor(allow="about"), callback="parse"),
     #    Rule(LinkExtractor(allow="research"), callback="parse"),
