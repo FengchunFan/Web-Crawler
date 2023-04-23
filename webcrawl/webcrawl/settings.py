@@ -12,6 +12,11 @@ BOT_NAME = 'webcrawl'
 SPIDER_MODULES = ['webcrawl.spiders']
 NEWSPIDER_MODULE = 'webcrawl.spiders'
 
+#crawler level limiter
+DEPTH_LIMIT = 10
+SPIDER_MIDDLEWARES = {
+    'scrapy.spidermiddlewares.depth.DepthMiddleware': 1,
+}
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'webcrawl (+http://www.yourdomain.com)'
