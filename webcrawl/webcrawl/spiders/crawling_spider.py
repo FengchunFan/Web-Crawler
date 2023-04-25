@@ -1,5 +1,6 @@
 #reference: https://www.youtube.com/watch?v=m_3gjHGxIJc
 #compile line: scrapy crawl WebCrawler -o output.json
+#size check: stat -c "%s" output.json
 
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
@@ -15,7 +16,7 @@ class WebCrawler(CrawlSpider):
     #    start_urls.append("https://news.ucr.edu/articles?page=" + str(i))
 
     #size limiter
-    max_size = 0.3 * 1024 * 1024 #0.3MB
+    max_size = 10 * 1024 * 1024 #10MB
     current_size = 0
 
     #crawl
