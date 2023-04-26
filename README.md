@@ -10,8 +10,8 @@ Referenced sources:
 
 https://www.youtube.com/watch?v=m_3gjHGxIJc
 
-https://docs.scrapy.org/en/latest/
+https://www.youtube.com/watch?v=-mkewdn9JdU&t=415s
 
-https://scrapy-chs.readthedocs.io/zh_CN/0.24/intro/tutorial.html
+https://docs.scrapy.org/en/latest/
 
 https://scrapeops.io/python-scrapy-playbook/

@@ -1,4 +1,5 @@
 #reference: https://www.youtube.com/watch?v=m_3gjHGxIJc
+
 #compile line: scrapy crawl WebCrawler -o output.json
 #size check: stat -c "%s" output.json
 
@@ -18,15 +19,13 @@ class WebCrawler(CrawlSpider):
     #    start_urls.append("https://news.ucr.edu/articles?page=" + str(i))
 
     #size limiter
-    max_size = 1 * 1024 * 1024 #10MB
+    max_size = 1 * 1024 * 1024 #0.1MB
     current_size = 0
 
     #crawl
     rules = (
         Rule(LinkExtractor(allow=".edu", deny="https://extension.ucr.edu/course"), callback="parse",), #can't figure these out yet
     #    Rule(LinkExtractor(allow="articles"), callback="parse"),
-    #    Rule(LinkExtractor(allow="about"), callback="parse"),
-    #    Rule(LinkExtractor(allow="research"), callback="parse"),
     )
 
     #decide how to scrape the links
@@ -42,22 +41,10 @@ class WebCrawler(CrawlSpider):
         url = response.css('meta[property="og:url"]::attr(content)').get()
         # if none of the three field yield null and size is less than max_size
         #if self.current_size <= self.max_size:
-        '''
-        if title and description and url and (self.current_size <= self.max_size): 
-            temp_size = sys.getsizeof(title+description+url)
-            self.current_size = self.current_size + temp_size
+        
+        if (title and url):
             yield{
-                "title": title,
-                "description": description,
-                "url": url
-            }
-        else:
-            print("reach size limit")
-            raise CloseSpider
-        '''
-        if title and description and url:
-            yield{
-                "title": title,
+               "title": title,
                 "description": description,
                 "url": url
             }
@@ -67,7 +54,7 @@ class WebCrawler(CrawlSpider):
                 print("reach size limit, size of output file: ", os.path.getsize('output.json')/1024/1024, "MB")
                 raise CloseSpider
 
-        # crawl urls from the current page, modified based on chatgpt generated code to recursively crawl
-        for href in response.css('a::attr(href)').getall():
-            if href.startswith('/') and "https://extension.ucr.edu/program/finder" not in href:
-                yield response.follow(href, self.parse)
+        #reference: https://www.youtube.com/watch?v=-mkewdn9JdU&t=415s
+        for link in response.css('a::attr(href)').getall():
+            if link.startswith('/'):
+                yield response.follow(link, callback = self.parse)
