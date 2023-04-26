@@ -14,7 +14,7 @@ NEWSPIDER_MODULE = 'webcrawl.spiders'
 
 #crawler level limiter
 DEPTH_LIMIT = 1000
-CLOSESPIDER_PAGECOUNT = 1000
+#CLOSESPIDER_PAGECOUNT = 1000
 SPIDER_MIDDLEWARES = {
     'scrapy.spidermiddlewares.depth.DepthMiddleware': 1,
 }

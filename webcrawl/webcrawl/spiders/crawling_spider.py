@@ -1,10 +1,11 @@
 #reference: https://www.youtube.com/watch?v=m_3gjHGxIJc
 
 #compile line: scrapy crawl WebCrawler -o output.json
-#size check: stat -c "%s" output.json
+#size check: stat -c "%s" output0.csv
 
 import sys
 import os
+import csv
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.exceptions import CloseSpider #stop spider under certain condition
@@ -19,12 +20,14 @@ class WebCrawler(CrawlSpider):
     #    start_urls.append("https://news.ucr.edu/articles?page=" + str(i))
 
     #size limiter
-    max_size = 1 * 1024 * 1024 #0.1MB
+    max_size = 0.2 * 1024 * 1024 #0.2MB
     current_size = 0
-
+    document_num = 0
+    file_name = f"output{document_num}.csv"
+    
     #crawl
     rules = (
-        Rule(LinkExtractor(allow=".edu", deny="https://extension.ucr.edu/course"), callback="parse",), #can't figure these out yet
+        Rule(LinkExtractor(allow=".edu", deny="extension" and "library"), callback="parse",), #can't figure these out yet
     #    Rule(LinkExtractor(allow="articles"), callback="parse"),
     )
 
@@ -42,19 +45,29 @@ class WebCrawler(CrawlSpider):
         # if none of the three field yield null and size is less than max_size
         #if self.current_size <= self.max_size:
         
-        if (title and url):
+        if (title and description and url):
             yield{
                "title": title,
                 "description": description,
                 "url": url
             }
+            data = [title, description, url]
+            with open(self.file_name, mode='a', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(data)
+                file.close()
 
-        if(os.path.isfile('output.json')):
-            if(os.path.getsize('output.json') > self.max_size):
-                print("reach size limit, size of output file: ", os.path.getsize('output.json')/1024/1024, "MB")
-                raise CloseSpider
+        if(os.path.isfile(self.file_name)):
+            if(os.path.getsize(self.file_name) > self.max_size):
+                print("reach size limit, size of output file: ", os.path.getsize(self.file_name)/1024/1024, "MB")
+                self.document_num += 1
+                self.file_name = f"output{self.document_num}.csv"
+                #raise CloseSpider
+
+        if(self.document_num == 10):
+            raise CloseSpider
 
         #reference: https://www.youtube.com/watch?v=-mkewdn9JdU&t=415s
         for link in response.css('a::attr(href)').getall():
-            if link.startswith('/'):
+            if link.startswith('/') and 'program/finder' not in link and 'about/news' not in link:
                 yield response.follow(link, callback = self.parse)
