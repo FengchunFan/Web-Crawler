@@ -13,10 +13,11 @@ SPIDER_MODULES = ['webcrawl.spiders']
 NEWSPIDER_MODULE = 'webcrawl.spiders'
 
 #crawler level limiter
-DEPTH_LIMIT = 1000
+#DEPTH_LIMIT = 1000
 #CLOSESPIDER_PAGECOUNT = 1000
 SPIDER_MIDDLEWARES = {
     'scrapy.spidermiddlewares.depth.DepthMiddleware': 1,
+    'scrapy.spidermiddlewares.offsite.OffsiteMiddleware': None #bypass offsite requests, unethical maybe
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
