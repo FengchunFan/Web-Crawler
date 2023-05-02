@@ -15,6 +15,7 @@ NEWSPIDER_MODULE = 'webcrawl.spiders'
 #crawler level limiter
 #DEPTH_LIMIT = 1000
 #CLOSESPIDER_PAGECOUNT = 1000
+DOWNLOAD_FAIL_ON_DATALOSE = False
 SPIDER_MIDDLEWARES = {
     'scrapy.spidermiddlewares.depth.DepthMiddleware': 1,
     'scrapy.spidermiddlewares.offsite.OffsiteMiddleware': None #bypass offsite requests, unethical maybe
