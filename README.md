@@ -15,3 +15,7 @@ https://www.youtube.com/watch?v=-mkewdn9JdU&t=415s
 https://docs.scrapy.org/en/latest/
 
 https://scrapeops.io/python-scrapy-playbook/
+
+unsolvable issue:
+
+https://github.com/scrapy/scrapy/issues/3321
