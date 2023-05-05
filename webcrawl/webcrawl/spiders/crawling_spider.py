@@ -19,7 +19,7 @@ class WebCrawler(CrawlSpider):
     keyword = "ucr" #school name
 
     #size limiter
-    max_size = 0.2 * 1024 * 1024 #10MB
+    max_size = 10 * 1024 * 1024 #10MB
     #current_size = 0
     document_num = 0
     file_name = f"output{document_num}.csv"
@@ -95,6 +95,6 @@ class WebCrawler(CrawlSpider):
 
         #reference: https://www.youtube.com/watch?v=-mkewdn9JdU&t=415s
         for link in response.css('a::attr(href)').getall():
-            if self.keyword in link and ".edu" in link and "archieve" not in link:
+            if self.keyword in link and ".edu" in link:
             #if ".edu" in link and self.keyword in link:
                 yield response.follow(link,callback=self.parse)
