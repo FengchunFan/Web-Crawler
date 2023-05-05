@@ -8,25 +8,26 @@ import csv
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.exceptions import CloseSpider #stop spider under certain condition
+import pandas as pd
 
 class WebCrawler(CrawlSpider):
     name = "WebCrawler" #identifier
-    allowed_domains = [".edu"]
-    #allowed_domains = [".edu", ".com"]
+    allowed_domains = ["www.ucr.edu"]
+    handle_httpstatus_list = [404, 429]
     #seed.txt, to be modified
-    #start_urls = ["https://www.ucr.edu/", "https://ucsd.edu/", "https://www.ucmerced.edu/", "https://uci.edu/", "https://www.ucdavis.edu/", "https://www.ucsc.edu/", "https://www.ucsb.edu/", "https://www.berkeley.edu/", "https://www.ucla.edu/"]
     start_urls = ["https://www.ucr.edu/"]
+    keyword = "ucr" #school name
 
     #size limiter
-    max_size = 10 * 1024 * 1024 #10MB
+    max_size = 0.2 * 1024 * 1024 #10MB
     #current_size = 0
     document_num = 0
     file_name = f"output{document_num}.csv"
     
     #crawl
     rules = (
-        Rule(LinkExtractor(allow=".edu"), callback="parse",), 
-    #    Rule(LinkExtractor(allow="articles"), callback="parse"),
+        Rule(LinkExtractor(allow=keyword and "edu"), callback="parse"), 
+    #    Rule(LinkExtractor(allow="edu"), callback="parse"),
     )
 
     #decide how to scrape the links
@@ -39,39 +40,48 @@ class WebCrawler(CrawlSpider):
         #specified by check source code for ucr webs
         title_plain = response.css('title::text').get()
         title_og = response.css('meta[property="og:title"]::attr(content)').get() 
-        description_meta = response.css('meta[name="Description"]::attr(content)').get()
+        description_meta = response.css('meta[name="description"]::attr(content)').get()
         description_og = response.css('meta[property="og:description"]::attr(content)').get()
         url_og = response.css('meta[property="og:url"]::attr(content)').get()
         url_plain = response.url #url of current website
         
-        if (title_og):
+        if title_og is not None:
             title = title_og
         else:
             title = title_plain
         
-        if(description_og):
+        if description_og is not None:
             description = description_og
         else:
             description = description_meta
 
-        if(url_og):
+        if url_og is not None:
             url = url_og
         else:
             url = url_plain
 
         #as long as legit title and url
-        if (title and url):
+        if (title and description and url):
             yield{
                "title": title,
                 "description": description,
                 "url": url
             }
+            data = {
+                "title": title,
+                "description": description,
+                "url": url
+            }
+            df = pd.DataFrame([data])
+            df.to_csv(self.file_name, mode='a', index=False, header=not os.path.isfile(self.file_name))
+            '''
             data = [title, description, url]
             with open(self.file_name, mode='a', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerow([item.replace('\n', '') if item else None for item in data]) #keep everything in 1 page 1 row format
+                #writer.writerow([item.replace('\n', '') for item in data])
                 file.close()
-
+            '''
         #size checker, making sure each output contains only the limited amount of data
         if(os.path.isfile(self.file_name)):
             if(os.path.getsize(self.file_name) > self.max_size):
@@ -85,7 +95,6 @@ class WebCrawler(CrawlSpider):
 
         #reference: https://www.youtube.com/watch?v=-mkewdn9JdU&t=415s
         for link in response.css('a::attr(href)').getall():
-            #if link.startswith('/') and 'program/finder' not in link and 'about/news' not in link:
-            #if link.startswith('/') and ".edu" in link:
-            if ".edu" in link:
-                yield response.follow(link, callback = self.parse)
+            if self.keyword in link and ".edu" in link and "archieve" not in link:
+            #if ".edu" in link and self.keyword in link:
+                yield response.follow(link,callback=self.parse)
