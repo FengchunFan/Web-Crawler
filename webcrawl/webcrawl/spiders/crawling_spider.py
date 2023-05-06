@@ -95,6 +95,6 @@ class WebCrawler(CrawlSpider):
 
         #reference: https://www.youtube.com/watch?v=-mkewdn9JdU&t=415s
         for link in response.css('a::attr(href)').getall():
-            if self.keyword in link and ".edu" in link:
-            #if ".edu" in link and self.keyword in link:
+            #if link.startswith('/') and self.keyword in link:
+            if link.startswith('/'):
                 yield response.follow(link,callback=self.parse)
