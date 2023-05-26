@@ -76,11 +76,11 @@ class WebCrawler(CrawlSpider):
             df = pd.DataFrame([data])
             df.to_csv(self.file_name, mode='a', index=False, header=not os.path.isfile(self.file_name))
             '''
-            data = ['['+title+']', '['+description+']', '['+url+']']
+            data = [title, description, url]
             with open(self.file_name, mode='a', newline='') as file:
                 writer = csv.writer(file)
-                writer.writerow([item.replace('\n', '') if item else None for item in data]) #keep everything in 1 page 1 row format
-                #writer.writerow([item.replace('\n', '') for item in data])
+                #writer.writerow([item.replace('\n', '') if item else None for item in data]) #keep everything in 1 page 1 row format
+                writer.writerow([item.replace('\n', '') for item in data])
                 file.close()
             
         #size checker, making sure each output contains only the limited amount of data
