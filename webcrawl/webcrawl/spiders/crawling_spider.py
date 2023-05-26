@@ -8,7 +8,7 @@ import csv
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.exceptions import CloseSpider #stop spider under certain condition
-import pandas as pd
+#import pandas as pd
 
 class WebCrawler(CrawlSpider):
     name = "WebCrawler" #identifier
@@ -67,6 +67,7 @@ class WebCrawler(CrawlSpider):
                 "description": description,
                 "url": url
             }
+            '''
             data = {
                 "title": title,
                 "description": description,
@@ -75,13 +76,13 @@ class WebCrawler(CrawlSpider):
             df = pd.DataFrame([data])
             df.to_csv(self.file_name, mode='a', index=False, header=not os.path.isfile(self.file_name))
             '''
-            data = [title, description, url]
+            data = ['['+title+']', '['+description+']', '['+url+']']
             with open(self.file_name, mode='a', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerow([item.replace('\n', '') if item else None for item in data]) #keep everything in 1 page 1 row format
                 #writer.writerow([item.replace('\n', '') for item in data])
                 file.close()
-            '''
+            
         #size checker, making sure each output contains only the limited amount of data
         if(os.path.isfile(self.file_name)):
             if(os.path.getsize(self.file_name) > self.max_size):
@@ -90,8 +91,8 @@ class WebCrawler(CrawlSpider):
                 self.file_name = f"output{self.document_num}.csv"
                 #raise CloseSpider
 
-        if(self.document_num == 13):
-            raise CloseSpider
+        #if(self.document_num == 13):
+        #    raise CloseSpider
 
         #reference: https://www.youtube.com/watch?v=-mkewdn9JdU&t=415s
         for link in response.css('a::attr(href)').getall():
